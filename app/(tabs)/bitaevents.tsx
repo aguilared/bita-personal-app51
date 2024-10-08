@@ -50,17 +50,6 @@ const convertDate = (date: string) => {
   return d;
 };
 
-type FormData = {
-  id: number;
-  bitacora_id: number;
-  tipo_event_id: number;
-  events_id: number;
-  event_date: string;
-  event: string;
-  tipoevent: string;
-  description: string;
-};
-
 const BitaEvents = () => {
   const { isPending, error, data, isFetching, isLoading, refetch } = useQuery({
     queryKey: ["bitaevents"],
@@ -80,7 +69,6 @@ const BitaEvents = () => {
   );
   const dates: any = new Date();
   const titulo = "Bita Eventos al: " + convertDate(dates);
-  const navigation = useNavigation();
 
   if (isLoading) {
     return <ActivityIndicator size="large" color="#e91e63" />;
