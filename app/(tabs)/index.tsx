@@ -82,7 +82,7 @@ const BitaEvents = () => {
         data={data}
         renderItem={({ item }) => (
           <List.Section style={styles.containerhtml}>
-            <Link href={`/${item.id}`} asChild>
+            <Link href={`/bitaEvent/${item.id}`} asChild>
               <List.Item
                 title={`Id:${item.id}, ${convertDate(item.event_date)}`}
                 left={() => <List.Icon icon="folder" />}

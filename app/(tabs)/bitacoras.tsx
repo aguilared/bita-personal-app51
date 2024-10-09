@@ -7,8 +7,6 @@ import {
   Appbar,
   useTheme,
 } from "react-native-paper";
-import { Text, View } from "../../components/Themed";
-import HTMLView from "react-native-htmlview";
 import axios from "axios";
 import dayjs from "dayjs";
 import React, { useState, useRef, useCallback } from "react";
@@ -41,17 +39,6 @@ const queryClient = new QueryClient({
 const convertDate = (date: string) => {
   const d = dayjs(date).format("DD-MM-YYYY HH:MM");
   return d;
-};
-
-type FormData = {
-  id: number;
-  bitacora_id: number;
-  tipo_event_id: number;
-  events_id: number;
-  event_date: string;
-  event: string;
-  tipoevent: string;
-  description: string;
 };
 
 const Bitacoras = () => {
