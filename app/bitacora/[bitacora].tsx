@@ -57,7 +57,7 @@ const Bitacora = () => {
   const ENDPOINT = API_URL + "bitacora/bitaevents/" + bitacora;
 
   const convertDate = (date: string) => {
-    const d = dayjs(date).format("DD-MM-YYYY HH:MM");
+    const d = dayjs(date).format("DD-MM-YYYY HH");
     return d;
   };
   const titulo = "Bitacora: " + bitacora;
@@ -82,7 +82,7 @@ const Bitacora = () => {
           <List.Section style={styles.containerhtml}>
             <Link href={`/bitaEvent/${item.id}`} asChild>
               <List.Item
-                title={`Id:${item.id}, ${convertDate(item.event_date)}`}
+                title={`Event:${item.id}, ${convertDate(item.event_date)}`}
                 left={() => <List.Icon icon="folder" />}
               />
             </Link>
