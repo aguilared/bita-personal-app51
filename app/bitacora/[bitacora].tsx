@@ -1,4 +1,24 @@
-import { StyleSheet, ActivityIndicator, Platform, Image } from "react-native";
+import { Link } from "expo-router";
+import {
+  StyleSheet,
+  ActivityIndicator,
+  Platform,
+  Image,
+  Text,
+} from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { Stack } from "expo-router";
+import { useEffect, useState } from "react";
+import { AppConfig } from "../../app.config";
+import {
+  useQuery,
+  focusManager,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+
+import Constants from "expo-constants";
+import axios from "axios";
 import {
   Subheading,
   Surface,
@@ -7,24 +27,10 @@ import {
   Appbar,
   useTheme,
 } from "react-native-paper";
-import axios from "axios";
-import dayjs from "dayjs";
-import React, { useState, useRef, useCallback } from "react";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { Link } from "expo-router";
-
-import {
-  useQuery,
-  focusManager,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
-
 import { FlashList } from "@shopify/flash-list";
-import Constants from "expo-constants";
-import { AppConfig } from "../../app.config";
-const { API_URL, BASE_URL_IMAGES } = Constants.expoConfig?.extra as AppConfig;
-const ENDPOINT = API_URL + "bitacora";
+import { ThemedText } from "@/components/ThemedText";
+import HTMLView from "react-native-htmlview";
+import dayjs from "dayjs";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,31 +43,31 @@ const queryClient = new QueryClient({
   },
 });
 
-const convertDate = (date: string) => {
-  const d = dayjs(date).format("DD-MM-YYYY HH:MM");
-  return d;
-};
+const Bitacora = () => {
+  const { bitacora } = useLocalSearchParams();
 
-const Bitacoras = () => {
+  useEffect(() => {
+    if (bitacora) {
+      //getGameDetails(bitaevent).then(setGameInfo);
+      console.log("bitacora", bitacora);
+    }
+  }, [bitacora]);
+
+  const { API_URL, BASE_URL_IMAGES } = Constants.expoConfig?.extra as AppConfig;
+  const ENDPOINT = API_URL + "bitacora/bitaevents/" + bitacora;
+
+  const convertDate = (date: string) => {
+    const d = dayjs(date).format("DD-MM-YYYY HH:MM");
+    return d;
+  };
+  const titulo = "Bitacora: " + bitacora;
+
   const { isPending, error, data, isFetching, isLoading, refetch } = useQuery({
-    queryKey: ["bitacoras"],
+    queryKey: ["bitacoraevents"],
     queryFn: () => axios.get(`${ENDPOINT}`).then((res) => res.data),
   });
 
-  const enabledRef = useRef(false);
-  useFocusEffect(
-    useCallback(() => {
-      if (enabledRef.current) {
-        refetch();
-      } else {
-        enabledRef.current = true;
-      }
-    }, [refetch])
-  );
-  const dates: any = new Date();
-  const titulo = "Bitacoras al: " + convertDate(dates);
-  const navigation = useNavigation();
-
+  console.log("DATA", data);
   if (isLoading) {
     return <ActivityIndicator size="large" color="#e91e63" />;
   }
@@ -73,19 +79,31 @@ const Bitacoras = () => {
       <FlashList
         data={data}
         renderItem={({ item }) => (
-          <List.Section>
-            <Link href={`/bitacora/${item.id}`}>
+          <List.Section style={styles.containerhtml}>
+            <Link href={`/bitaEvent/${item.id}`} asChild>
               <List.Item
                 title={`Id:${item.id}, ${convertDate(item.event_date)}`}
                 left={() => <List.Icon icon="folder" />}
               />
             </Link>
-            <List.Item
-              title={`Id:${item.id}, Events:${item._count.bita_events}`}
-              left={() => <List.Icon icon="folder" />}
+
+            <Image
+              source={{ uri: BASE_URL_IMAGES + `${item.id}` + ".jpg" }}
+              style={[
+                styles.image,
+                {
+                  borderColor: "gray",
+                },
+              ]}
             />
-            <List.Item title={`Date:${convertDate(item.bitacora_date)}`} />
-            <List.Item title={`Author:${item.author.name}`} />
+            <ThemedText>{`TipoEvent: ${item.tipoEvent.description}`}</ThemedText>
+            <ThemedText>{`Event: ${item.event.description}`}</ThemedText>
+            <HTMLView
+              value={`${item.description}`}
+              style={styles.containerhtml}
+              stylesheet={styless}
+            />
+
             <Divider style={{ backgroundColor: "gray", marginTop: 30 }} />
           </List.Section>
         )}
@@ -99,10 +117,11 @@ const Bitacoras = () => {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Bitacoras />
+      <Bitacora />
     </QueryClientProvider>
   );
 }
+
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "#D5DBDB",
@@ -127,6 +146,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginRight: 3,
     marginLeft: 3,
+  },
+  containerhtml: {
+    marginTop: 1,
+    marginBottom: 1,
   },
   title: {
     marginTop: 5,

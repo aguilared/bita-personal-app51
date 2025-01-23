@@ -13,4 +13,5 @@ export default {
     BASE_URL_IMAGES: process.env.BASE_URL_IMAGES,
   },
   scheme: "bita-personal-app",
+  plugins: ["expo-font", "expo-router"],
 };
