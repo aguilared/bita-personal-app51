@@ -79,7 +79,10 @@ const BitaEvents = () => {
     }, [refetch])
   );
   const dates: any = new Date();
-  const titulo = "Bita Eventos al: " + convertDate(dates);
+  const idimage = 22;
+  const titulo = "Bita Eventos alll: " + convertDate(dates);
+  const titulo2 = "Images:" + BASE_URL_IMAGES + idimage + ".jpg";
+
   const navigation = useNavigation();
 
   if (isLoading) {
@@ -89,6 +92,8 @@ const BitaEvents = () => {
   return (
     <Surface style={styles.container}>
       <Subheading style={styles.title}>{titulo}</Subheading>
+      <Subheading style={styles.title}>{titulo2}</Subheading>
+
       <Divider style={{ backgroundColor: "gray", marginTop: 10 }} />
       <FlashList
         data={data}
@@ -102,7 +107,7 @@ const BitaEvents = () => {
             </Link>
 
             <Image
-              source={{ uri: BASE_URL_IMAGES + `${item.id}` + ".jpg" }}
+              source={{ uri: BASE_URL_IMAGES + `${idimage}` + ".jpg" }}
               style={[
                 styles.image,
                 {

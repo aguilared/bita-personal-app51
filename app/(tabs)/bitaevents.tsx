@@ -79,7 +79,7 @@ const BitaEvents = () => {
     }, [refetch])
   );
   const dates: any = new Date();
-  const titulo = "Bita Eventos al: " + convertDate(dates);
+  const titulo = "Bita Eventos all: " + convertDate(dates);
   const navigation = useNavigation();
 
   if (isLoading) {
